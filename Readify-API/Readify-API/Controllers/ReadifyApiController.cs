@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Readify_API.Filters;
 using Readify_API.Services;
 
 namespace Readify_API.Controllers
@@ -13,23 +14,42 @@ namespace Readify_API.Controllers
     {
         [HttpGet]
         [Route("Fibonacci")]
-        public HttpResponseMessage GetNthFibonacciNumber([FromUri]string n)
+        [RejectRequestsWithNoBody]
+        public HttpResponseMessage GetNthFibonacciNumber([FromUri]int n)
         {
-            long parsedQuery;
+            var nthNumber = FibonacciService.GetNthFibbinociNumber(n);
 
-           var result= Int64.TryParse(n, out parsedQuery);
+            return Request.CreateResponse(HttpStatusCode.OK, nthNumber);
 
-           if (result)
 
-            {
-                var nthNumber = FibonacciService.GetNthFibbinociNumber(parsedQuery);
-
-                return Request.CreateResponse(HttpStatusCode.OK, nthNumber);
-            }
-
-            return Request.CreateResponse(HttpStatusCode.BadRequest, "The request is invalid.");
-           
         }
-        
+
+        [HttpGet]
+        [Route("ReverseWords")]
+        public HttpResponseMessage GetReverseString([FromUri]string sentence)
+        {
+            var result = ReverseWordsService.ReverseString(sentence);
+
+            return Request.CreateResponse(HttpStatusCode.OK, result);
+        }
+
+        [HttpGet]
+        [Route("Token")]
+        public HttpResponseMessage GetToken()
+        {
+            var token = Guid.NewGuid();
+            return Request.CreateResponse(HttpStatusCode.OK, token);
+        }
+
+        [HttpGet]
+        [Route("TriangleType")]
+        [RejectRequestsWithNoBody]
+        public HttpResponseMessage GetTriangleType([FromUri]int a, int b, int c)
+        {
+
+            var result = TriangleTypeService.GetTriangleType(a, b, c);
+            return Request.CreateResponse(HttpStatusCode.OK, result.ToString());
+
+        }
     }
 }

@@ -13,6 +13,9 @@ namespace Readify_API
     {
         protected void Application_Start()
         {
+            var config = GlobalConfiguration.Configuration;
+            config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Never;
+
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings
            .ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
